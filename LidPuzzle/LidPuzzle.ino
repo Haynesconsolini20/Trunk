@@ -1,21 +1,64 @@
-//Touch pins
-int pins[4] = {5,6,7,8};
-int correct[4] = {5,6,7,8}; 
-int pressed[4] = {0,0,0,0};
+/**********************************************************************
+ * CAPACATIVE TOUCH SETUP
+ **********************************************************************/
+#include <Wire.h>
+#include <SPI.h>
+#include <Adafruit_CAP1188.h>
 
-//Output device
+// Reset Pin is used for I2C or SPI
+#define CAP1188_RESET  9
+
+// CS pin is used for software or hardware SPI
+#define CAP1188_CS  10
+
+// These are defined for software SPI, for hardware SPI, check your 
+// board's SPI pins in the Arduino documentation
+#define CAP1188_MOSI  11
+#define CAP1188_MISO  12
+#define CAP1188_CLK  13
+
+// For I2C, connect SDA to your Arduino's SDA pin, SCL to SCL pin
+// On UNO/Duemilanove/etc, SDA == Analog 4, SCL == Analog 5
+// On Leonardo/Micro, SDA == Digital 2, SCL == Digital 3
+// On Mega/ADK/Due, SDA == Digital 20, SCL == Digital 21
+
+// Use I2C, no reset pin!
+Adafruit_CAP1188 cap = Adafruit_CAP1188();
+
+/**********************************************************************
+ * PINS
+ **********************************************************************/
+int pins[4] = {5,6,7,8};
 #define outputDevice 9
-int counter = 0;
 #define wrongSound 10
 #define inputSound 11
 #define correctSound 12
 
+/**********************************************************************
+ * GLOBALS
+ * correct - correct sequence of presses
+ * pressed - pressed sequence
+ * counter - keeps track of index for pressed
+ **********************************************************************/
+int correct[4] = {5,6,7,8}; 
+int pressed[4] = {0,0,0,0};
+int counter = 0;
+#define SOUND_DELAY 200
 
+/**********************************************************************
+ * PLAY SOUND
+ * Plays a sound for SOUND_DELAY milliseconds
+ **********************************************************************/
 void playSound(int soundPin) {
   digitalWrite(soundPin, HIGH);
-  delay(200);
+  delay(SOUND_DELAY);
   digitalWrite(soundPin, LOW);
 }
+
+/**********************************************************************
+ * CHECK WIN
+ * Returns true if the pressed and correct arrays are equal
+ **********************************************************************/
 bool checkWin() {
   for (int i = 0; i < 4; i++) {
     if (correct[i] != pressed[i]) {
@@ -25,44 +68,67 @@ bool checkWin() {
   return true;
 }
 
+/**********************************************************************
+ * RESET SEQUENCE
+ * Infinite loop until all 4 touch sensors are held
+ **********************************************************************/
 void resetSequence() {
   while(true) {
-    bool finished = true;
-    for (int i = 0; i < 4; i++) {
-      if (!digitalRead(pins[i])) {
-        finished = false;
+    int resetCount = 0;
+    uint8_t touched = cap.touched();
+    if (touched == 0) {
+      // No touch detected
+      return;
+    }
+    for (uint8_t i=0; i<8; i++) {
+      if (touched & (1 << i)) {
+        Serial.print("C"); Serial.print(i+1); Serial.print("\t");
+        resetCount++;
+        playSound(inputSound);
       }
     }
-    if (finished) break;
+    if (resetCount == 4) break;
   }
 }
 
+/**********************************************************************
+ * SETUP
+ * Set up the pins and initial values
+ **********************************************************************/
 void setup() {
-  // Setup touch pins
-  for (int i=0; i < 4; i++) {
-    pinMode(pins[i], INPUT);
-  }
-
-  // Setup output pin
   pinMode(outputDevice, OUTPUT);
+  digitalWrite(outputDevice, HIGH);
+  
   pinMode(wrongSound, OUTPUT);
+  digitalWrite(wrongSound, LOW);
+  
   pinMode(inputSound, OUTPUT);
+  digitalWrite(inputSound, LOW);
+  
   pinMode(correctSound, OUTPUT);
+  digitalWrite(correctSound, LOW);
 
 }
 
+/**********************************************************************
+ * LOOP
+ * General game loop
+ **********************************************************************/
 void loop() {
-  int resetCount = 0;
-  //Loop through the 4 inputs
-  for (int i = 0; i < 4; i++) {
-    if (digitalRead(pins[i]) == HIGH) {
-      playSound(inputSound);
-      pressed[counter] == pins[i];
-      counter++;
-    }
-  
+  uint8_t touched = cap.touched();
+  if (touched == 0) {
+    // No touch detected
+    return;
   }
-  // If we've sequenced n times, we're done
+  for (uint8_t i=0; i<8; i++) {
+    if (touched & (1 << i)) {
+      Serial.print("C"); Serial.print(i+1); Serial.print("\t");
+      pressed[counter] = i+1;
+      counter++;
+      playSound(inputSound);
+    }
+  }
+  // If we've gotten 4 inputs, check the win state
   if (counter == 4) {
     if (checkWin()) {
       playSound(correctSound);
@@ -74,8 +140,4 @@ void loop() {
       counter = 0;
     }
   }
-
-  
-  
-
 }
