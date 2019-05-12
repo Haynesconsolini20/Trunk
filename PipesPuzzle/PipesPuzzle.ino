@@ -1,43 +1,42 @@
 #include <Adafruit_NeoPixel.h>
 
-    // Which pin on the Arduino is connected to the NeoPixels?
-    // On a Trinket or Gemma we suggest changing this to 1:
-    #define pipe_1    3
-    #define pipe_2    4
-    #define pipe_3    5
 
-    #define inputSound 11
-    #define winSound 13
+#define pipe_1    3
+#define pipe_2    4
+#define pipe_3    5
 
-    #define basket_1  6
-    #define basket_2  7
-    #define basket_3  8
+#define inputSound 11
+#define winSound 13
 
-    #define b1_receiver 10
+#define basket_1  6
+#define basket_2  7
+#define basket_3  8
 
-    #define b2_receiver 12
+#define b1_receiver 10
 
-    #define b3_receiver 14
+#define b2_receiver 12
 
-    // How many NeoPixels are attached to the Arduino?
-    #define pipe_counts 5
-    #define basket_counts 12
+#define b3_receiver 14
+
+    
+#define pipe_counts 5
+#define basket_counts 12
 
     
      
-    // Declare pipes
-    Adafruit_NeoPixel pipe_1_strip(pipe_counts, pipe_1, NEO_GRB + NEO_KHZ800);
-    Adafruit_NeoPixel pipe_2_strip(pipe_counts, pipe_2, NEO_GRB + NEO_KHZ800);
-    Adafruit_NeoPixel pipe_3_strip(pipe_counts, pipe_3, NEO_GRB + NEO_KHZ800);
+    
+Adafruit_NeoPixel pipe_1_strip(pipe_counts, pipe_1, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pipe_2_strip(pipe_counts, pipe_2, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pipe_3_strip(pipe_counts, pipe_3, NEO_GRB + NEO_KHZ800);
 
-    //Declare baskets
-    Adafruit_NeoPixel basket_1_strip(basket_counts, basket_1, NEO_GRB + NEO_KHZ800);
-    Adafruit_NeoPixel basket_2_strip(basket_counts, basket_2, NEO_GRB + NEO_KHZ800);
-    Adafruit_NeoPixel basket_3_strip(basket_counts, basket_3, NEO_GRB + NEO_KHZ800);
 
-    uint32_t red = pipe_1_strip.Color(255, 0, 0);
-    uint32_t green = pipe_1_strip.Color(0, 255, 0);
-    uint32_t blue = pipe_1_strip.Color(0, 0, 255);
+Adafruit_NeoPixel basket_1_strip(basket_counts, basket_1, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel basket_2_strip(basket_counts, basket_2, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel basket_3_strip(basket_counts, basket_3, NEO_GRB + NEO_KHZ800);
+
+uint32_t red = pipe_1_strip.Color(255, 0, 0);
+uint32_t green = pipe_1_strip.Color(0, 255, 0);
+uint32_t blue = pipe_1_strip.Color(0, 0, 255);
 
     
 void playSound(int soundPin) {
