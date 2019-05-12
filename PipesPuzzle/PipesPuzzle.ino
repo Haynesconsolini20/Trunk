@@ -48,7 +48,7 @@ void playSound(int soundPin) {
 void resetSequence() {
   int resetCount = 0;
   while (resetCount < 2) {
-    if (digitalRead(b2_receiver)) {
+    if (!digitalRead(b2_receiver)) {
       resetCount++;
     }
   }
@@ -56,24 +56,24 @@ void resetSequence() {
 }
 
 void initialColors() {
-    pipe_1_strip.setPixelColor(pipe_counts,red);
+    pipe_1_strip.fill(red);
     pipe_1_strip.show(); 
     
-    pipe_2_strip.setPixelColor(pipe_counts,green);
+    pipe_2_strip.fill(green);
     pipe_2_strip.show(); 
     
-    pipe_3_strip.setPixelColor(pipe_counts,blue);
+    pipe_3_strip.fill(blue);
     pipe_3_strip.show(); 
 
     delay(5000);
 
-    basket_1_strip.setPixelColor(basket_counts,blue);
+    basket_1_strip.fill(blue);
     basket_1_strip.show(); 
     
-    basket_1_strip.setPixelColor(basket_counts,green);
+    basket_1_strip.fill(green);
     basket_2_strip.show(); 
     
-    basket_3_strip.setPixelColor(basket_counts,red);
+    basket_3_strip.fill(red);
     basket_3_strip.show(); 
 }
 
@@ -93,9 +93,9 @@ bool checkWin() {
 
 void rotateBaskets() {
   uint32_t color_a = basket_1_strip.getPixelColor(1);
-  basket_1_strip.setPixelColor(basket_counts, basket_2_strip.getPixelColor(1));
-  basket_2_strip.setPixelColor(basket_counts, basket_3_strip.getPixelColor(1));
-  basket_3_strip.setPixelColor(basket_counts, color_a);
+  basket_1_strip.fill(basket_2_strip.getPixelColor(1));
+  basket_2_strip.fill(basket_3_strip.getPixelColor(1));
+  basket_3_strip.fill(color_a);
 
   basket_1_strip.show();
   basket_2_strip.show();
@@ -104,8 +104,8 @@ void rotateBaskets() {
 
 void swapPipes(Adafruit_NeoPixel pipe_a, Adafruit_NeoPixel pipe_b) {
       uint32_t color_a = pipe_a.getPixelColor(1);
-      pipe_a.setPixelColor(pipe_counts,pipe_b.getPixelColor(1));
-      pipe_b.setPixelColor(pipe_counts,color_a);
+      pipe_a.fill(pipe_b.getPixelColor(1));
+      pipe_b.fill(color_a);
 
       pipe_a.show();
       pipe_b.show();
@@ -113,8 +113,11 @@ void swapPipes(Adafruit_NeoPixel pipe_a, Adafruit_NeoPixel pipe_b) {
    
 void setup() {
     pipe_1_strip.begin();
+    pipe_1_strip.show();
     pipe_2_strip.begin();
+    pipe_2_strip.show();
     pipe_3_strip.begin();
+    pipe_3_strip.show();
     
     /*basket_1_strip.begin();
     basket_2_strip.begin();
