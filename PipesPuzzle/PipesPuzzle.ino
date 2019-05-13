@@ -173,16 +173,16 @@ void setup() {
  * General game loop
  **********************************************************************/
 void loop() {
-  if (digitalRead(b1_receiver)) {
+  if (!digitalRead(b1_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_1_strip,pipe_2_strip);
   }
-  if (digitalRead(b2_receiver)) {
+  if (!digitalRead(b2_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_1_strip,pipe_3_strip);
     rotateBaskets();
   }
-  if (digitalRead(b3_receiver)) {
+  if (!digitalRead(b3_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_2_strip,pipe_3_strip);
   }
