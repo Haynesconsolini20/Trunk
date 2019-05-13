@@ -187,6 +187,7 @@ void setup() {
  * General game loop
  **********************************************************************/
 void loop() {
+  debug();
   if (!digitalRead(b1_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_1_strip,pipe_2_strip);
