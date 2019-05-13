@@ -197,21 +197,23 @@ void loop() {
   if (!digitalRead(b1_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_1_strip,pipe_2_strip);
+    delay(500);
   }
   if (!digitalRead(b2_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_1_strip,pipe_3_strip);
     rotateBaskets();
+    delay(500);
   }
   if (!digitalRead(b3_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_2_strip,pipe_3_strip);
+    delay(500);
   }
   if (checkWin()) {
     playSound(winSound);
     digitalWrite(outputDevice, LOW);
     resetSequence();
   }
-  delay(500);
 
 }
