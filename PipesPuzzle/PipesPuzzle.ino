@@ -187,6 +187,7 @@ void setup() {
   Serial.println(digitalRead(b3_receiver));
   Serial.println("******************************");
  }
+ 
 /**********************************************************************
  * LOOP 
  * General game loop
@@ -211,5 +212,6 @@ void loop() {
     digitalWrite(outputDevice, LOW);
     resetSequence();
   }
+  delay(500);
 
 }
