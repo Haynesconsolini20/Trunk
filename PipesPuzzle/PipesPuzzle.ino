@@ -18,7 +18,8 @@
 #define b1_receiver 10
 #define b2_receiver 12
 #define b3_receiver 14
-
+//Maglock
+#define outputDevice 13
 /**********************************************************************
  * NEOPIXEL SETUP
  **********************************************************************/
@@ -66,6 +67,7 @@ void resetSequence() {
       resetCount++;
     }
   }
+  digitalWrite(outputDevice, HIGH);
   initialColors(); 
 }
 
@@ -167,6 +169,9 @@ void setup() {
     
     pinMode(winSound, OUTPUT);  
     digitalWrite(winSound, LOW);
+
+    pinMode(outputDevice, OUTPUT);
+    digitalWrite(outputDevice, HIGH);
 }
 
 /**********************************************************************
@@ -203,6 +208,7 @@ void loop() {
   }
   if (checkWin()) {
     playSound(winSound);
+    digitalWrite(outputDevice, LOW);
     resetSequence();
   }
 
