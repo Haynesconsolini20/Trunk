@@ -23,7 +23,7 @@
  * NEOPIXEL SETUP
  **********************************************************************/
 //Pixel counts
-#define pipe_counts 5
+#define pipe_counts 22
 #define basket_counts 12
 //Pipe setup
 Adafruit_NeoPixel pipe_1_strip(pipe_counts, pipe_1, NEO_GRB + NEO_KHZ800);
@@ -144,6 +144,7 @@ void swapPipes(Adafruit_NeoPixel pipe_a, Adafruit_NeoPixel pipe_b) {
  * Initialize all pins and initial states
  **********************************************************************/
 void setup() {
+    Serial.begin(9600);
     pipe_1_strip.begin();
     pipe_1_strip.show();
     pipe_2_strip.begin();
@@ -168,6 +169,19 @@ void setup() {
     digitalWrite(winSound, LOW);
 }
 
+/**********************************************************************
+ * LOOP 
+ * General game loop
+ **********************************************************************/
+ void debug() {
+  Serial.print("b1: ");
+  Serial.println(digitalRead(b1_receiver));
+  Serial.print("b2: ");
+  Serial.println(digitalRead(b2_receiver));
+  Serial.print("b3: ");
+  Serial.println(digitalRead(b3_receiver));
+  Serial.println("******************************");
+ }
 /**********************************************************************
  * LOOP 
  * General game loop
