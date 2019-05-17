@@ -50,9 +50,9 @@ int counter = 0;
  * Plays a sound for SOUND_DELAY milliseconds
  **********************************************************************/
 void playSound(int soundPin) {
-  digitalWrite(soundPin, HIGH);
-  delay(SOUND_DELAY);
   digitalWrite(soundPin, LOW);
+  delay(SOUND_DELAY);
+  digitalWrite(soundPin, HIGH);
 }
 
 /**********************************************************************
@@ -100,13 +100,13 @@ void setup() {
   digitalWrite(outputDevice, HIGH);
   
   pinMode(wrongSound, OUTPUT);
-  digitalWrite(wrongSound, LOW);
+  digitalWrite(wrongSound, HIGH);
   
   pinMode(inputSound, OUTPUT);
-  digitalWrite(inputSound, LOW);
+  digitalWrite(inputSound, HIGH);
   
   pinMode(correctSound, OUTPUT);
-  digitalWrite(correctSound, LOW);
+  digitalWrite(correctSound, HIGH);
 
 }
 
