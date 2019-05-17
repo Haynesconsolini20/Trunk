@@ -19,7 +19,7 @@
 #define b2_receiver 12
 #define b3_receiver 14
 //Maglock
-#define outputDevice 13
+#define outputDevice 15
 /**********************************************************************
  * NEOPIXEL SETUP
  **********************************************************************/
@@ -43,16 +43,16 @@ Adafruit_NeoPixel basket_3_strip(basket_counts, basket_3, NEO_GRB + NEO_KHZ800);
 uint32_t red = pipe_1_strip.Color(255, 0, 0);
 uint32_t green = pipe_1_strip.Color(0, 255, 0);
 uint32_t blue = pipe_1_strip.Color(0, 0, 255);
-#define SOUND_DELAY 200
+#define SOUND_DELAY 500
 
 /**********************************************************************
  * PLAY SOUND
  * Plays a sound for SOUND_DELAY milliseconds
  **********************************************************************/ 
 void playSound(int soundPin) {
-  digitalWrite(soundPin, HIGH);
-  delay(SOUND_DELAY);
   digitalWrite(soundPin, LOW);
+  delay(SOUND_DELAY);
+  digitalWrite(soundPin, HIGH);
 }
 
 /**********************************************************************
@@ -61,6 +61,7 @@ void playSound(int soundPin) {
  * resets the colors to the initial values
  **********************************************************************/
 void resetSequence() {
+  
   int resetCount = 0;
   while (resetCount < 2) {
     if (!digitalRead(b2_receiver)) {
@@ -88,7 +89,7 @@ void initialColors() {
     basket_1_strip.fill(blue);
     basket_1_strip.show(); 
     
-    basket_1_strip.fill(green);
+    basket_2_strip.fill(green);
     basket_2_strip.show(); 
     
     basket_3_strip.fill(red);
@@ -117,6 +118,7 @@ bool checkWin() {
  * Rotates the colors of the baskets to the "left"(3->2->->1->3)
  **********************************************************************/
 void rotateBaskets() {
+  Serial.println("Rotating baskets");
   uint32_t color_a = basket_1_strip.getPixelColor(1);
   basket_1_strip.fill(basket_2_strip.getPixelColor(1));
   basket_2_strip.fill(basket_3_strip.getPixelColor(1));
@@ -125,19 +127,22 @@ void rotateBaskets() {
   basket_1_strip.show();
   basket_2_strip.show();
   basket_3_strip.show();
+  Serial.println("Baskets rotated");
 }
 
 /**********************************************************************
  * SWAP PIPES
  * Swaps the colors of two pipes
  **********************************************************************/
-void swapPipes(Adafruit_NeoPixel pipe_a, Adafruit_NeoPixel pipe_b) {
+void swapPipes(Adafruit_NeoPixel &pipe_a, Adafruit_NeoPixel &pipe_b) {
+      Serial.println("Swapping pipes");
       uint32_t color_a = pipe_a.getPixelColor(1);
       pipe_a.fill(pipe_b.getPixelColor(1));
       pipe_b.fill(color_a);
-
+      
       pipe_a.show();
       pipe_b.show();
+      Serial.println("Pipes swapped");
 }
 
 /**********************************************************************
@@ -165,13 +170,14 @@ void setup() {
     pinMode(b3_receiver, INPUT);
 
     pinMode(inputSound, OUTPUT);
-    digitalWrite(inputSound, LOW);
+    digitalWrite(inputSound, HIGH);
     
     pinMode(winSound, OUTPUT);  
-    digitalWrite(winSound, LOW);
+    digitalWrite(winSound, HIGH);
 
     pinMode(outputDevice, OUTPUT);
     digitalWrite(outputDevice, HIGH);
+    Serial.println("End setup");
 }
 
 /**********************************************************************
@@ -180,12 +186,12 @@ void setup() {
  **********************************************************************/
  void debug() {
   Serial.print("b1: ");
-  Serial.println(digitalRead(b1_receiver));
-  Serial.print("b2: ");
+  Serial.println(analogRead(b1_receiver));
+  /*Serial.print("b2: ");
   Serial.println(digitalRead(b2_receiver));
   Serial.print("b3: ");
   Serial.println(digitalRead(b3_receiver));
-  Serial.println("******************************");
+  Serial.println("******************************");*/
  }
  
 /**********************************************************************
@@ -193,27 +199,35 @@ void setup() {
  * General game loop
  **********************************************************************/
 void loop() {
-  debug();
+  //Serial.println("Top of loop");
+  //debug();
   if (!digitalRead(b1_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_1_strip,pipe_2_strip);
+    Serial.println("Swap 1 & 2");
     delay(500);
   }
+  //Serial.println("*");
   if (!digitalRead(b2_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_1_strip,pipe_3_strip);
     rotateBaskets();
+    Serial.println("Swap 1 & 3 and rotate");
     delay(500);
   }
+  //Serial.println("*");
   if (!digitalRead(b3_receiver)) {
     playSound(inputSound);
     swapPipes(pipe_2_strip,pipe_3_strip);
+    Serial.println("Swap 2 & 3");
     delay(500);
   }
   if (checkWin()) {
+    Serial.println("win conditional");
     playSound(winSound);
     digitalWrite(outputDevice, LOW);
     resetSequence();
   }
+  //Serial.println("Bottom of loop");
 
 }
