@@ -1,12 +1,13 @@
-
 unsigned long startTimes[4] = {0,0,0,0};
 unsigned long elapsed_time[4] = {0,0,0,0};
 int pins[4] = {1,2,3,4};
 int sounds[4] = {5,6,7,8};
 
 
-void swapSounds(int pin1, int pin2) {
-  return;
+void swapSounds(int index1, int index2) {
+  int soundA = sounds[index1];
+  sounds[index1] = sounds[index2];
+  sounds[index2] = soundA;
 }
 
 void playSound(int soundPin) {
@@ -15,7 +16,14 @@ void playSound(int soundPin) {
   digitalWrite(soundPin, HIGH);
 }
 void setup() {
-  // put your setup code here, to run once:
+  for (int i = 0; i < 4; i++) {
+    //Buttons
+    pinMode(pins[i], INPUT);
+    //Sounds
+    pinMode(sounds[i], OUTPUT);
+    digitalWrite(sounds[i], HIGH);
+  }
+ 
 
 }
 
@@ -37,7 +45,7 @@ void loop() {
   int hold1, hold2, holdCount = 0;
   for (int i = 0; i < 4; i++) {
     if (elapsed_time[i] > 2000) {
-      heldCount ? hold1 = pins[i] : hold2 = pins[i];
+      heldCount ? hold1 = i : hold2 = i;
       heldCount++;
     }
   }
@@ -46,7 +54,7 @@ void loop() {
     swapSounds(hold1, hold2);
   else if (heldCount > 2)
     playSound(wrongSound);
-
+    
   if (digitalRead(submitButton) AND checkWin()) {
     play(winSound);
     digitalWrite(outputDevice, LOW);
