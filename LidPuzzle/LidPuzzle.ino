@@ -87,15 +87,9 @@ void setup() {
  * General game loop
  **********************************************************************/
 void loop() {
-  uint8_t touched = cap.touched();
-  if (touched == 0) {
-    // No touch detected
-    return;
-  }
-  for (uint8_t i=0; i<8; i++) {
-    if (touched & (1 << i)) {
-      Serial.print("C"); Serial.print(i+1); Serial.print("\t");
-      pressed[counter] = i+1;
+  for (int i=0; i < 4; i++) {
+    if (digitalRead(pins[i]) {
+      pressed[counter] = pins[i];
       counter++;
       playSound(inputSound);
     }
