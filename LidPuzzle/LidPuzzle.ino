@@ -102,6 +102,7 @@ bool buttonPressed(int pin) {
  * General game loop
  **********************************************************************/
 void loop() {
+  debug();
   for (int i=0; i < 4; i++) {
     if (digitalRead(pins[i]) && !buttonPressed(pins[i])) {
       Serial.println("Button added");
@@ -122,6 +123,7 @@ void loop() {
       digitalWrite(outputDevice, HIGH);
     }
     else {
+      Serial.println("Wrong sequence, resetting");
       playSound(wrongSound);
       counter = 0;
     }
