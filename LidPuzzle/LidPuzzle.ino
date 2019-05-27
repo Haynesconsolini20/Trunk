@@ -48,7 +48,6 @@ bool checkWin() {
 void resetSequence() {
   while(true) {
     int resetCount = 0;
-    
     for (int i=0; i<4; i++) {
         if (digitalRead(pins[i])) {
           resetCount++;
@@ -102,7 +101,7 @@ bool buttonPressed(int pin) {
  * General game loop
  **********************************************************************/
 void loop() {
-  debug();
+  //debug();
   for (int i=0; i < 4; i++) {
     if (digitalRead(pins[i]) && !buttonPressed(pins[i])) {
       Serial.println("Button added");
@@ -114,6 +113,12 @@ void loop() {
   // If we've gotten 4 inputs, check the win state
   if (counter == 4) {
     Serial.println("4 counters");
+    for (int i = 0; i < 4; i++) {
+      Serial.print(i+1);
+      Serial.print(": ");
+      Serial.println(pressed[i]);
+    }
+    Serial.println("**********************");
     if (checkWin()) {
       Serial.println("Victory sequence");
       digitalWrite(outputDevice, LOW);
