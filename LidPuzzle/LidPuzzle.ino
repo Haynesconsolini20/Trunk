@@ -13,7 +13,7 @@ int pins[4] = {2,3,4,5};
  * pressed - pressed sequence
  * counter - keeps track of index for pressed
  **********************************************************************/
-int correct[4] = {2,3,4,5}; 
+int correct[4] = {5,3,2,4}; 
 int pressed[4] = {0,0,0,0};
 int counter = 0;
 #define SOUND_DELAY 200
