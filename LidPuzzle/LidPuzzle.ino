@@ -2,7 +2,7 @@
  * PINS
  **********************************************************************/
 int pins[4] = {2,3,4,5};
-#define outputDevice 9
+#define outputDevice 13
 #define wrongSound 10
 #define inputSound 11
 #define correctSound 12
