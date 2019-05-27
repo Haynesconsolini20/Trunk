@@ -103,14 +103,20 @@ bool buttonPressed(int pin) {
 void loop() {
   //debug();
   for (int i=0; i < 4; i++) {
-    if (digitalRead(pins[i]) && !buttonPressed(pins[i])) {
+    if (digitalRead(pins[i]) && (correct[counter] == pins[i])) {
       Serial.println("Button added");
-      pressed[counter] = pins[i];
       counter++;
       playSound(inputSound);
     }
   }
-  // If we've gotten 4 inputs, check the win state
+  if (counter == 4) {
+    digitalWrite(outputDevice, LOW);
+    counter = 0;
+    playSound(correctSound);
+    resetSequence();
+    digitalWrite(outputDevice, HIGH);
+  }
+  /*// If we've gotten 4 inputs, check the win state
   if (counter == 4) {
     Serial.println("4 counters");
     for (int i = 0; i < 4; i++) {
@@ -132,5 +138,5 @@ void loop() {
       playSound(wrongSound);
       counter = 0;
     }
-  }
+  }*/
 }
