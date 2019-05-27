@@ -1,7 +1,7 @@
 /**********************************************************************
  * PINS
  **********************************************************************/
-int pins[4] = {5,6,7,8};
+int pins[4] = {2,3,4,5};
 #define outputDevice 9
 #define wrongSound 10
 #define inputSound 11
@@ -13,7 +13,7 @@ int pins[4] = {5,6,7,8};
  * pressed - pressed sequence
  * counter - keeps track of index for pressed
  **********************************************************************/
-int correct[4] = {5,6,7,8}; 
+int correct[4] = {2,3,4,5}; 
 int pressed[4] = {0,0,0,0};
 int counter = 0;
 #define SOUND_DELAY 200
@@ -64,6 +64,7 @@ void resetSequence() {
  * Set up the pins and initial values
  **********************************************************************/
 void setup() {
+  Serial.begin(9600);
   for (int i = 0; i < 4; i++) {
     pinMode(pins[i], INPUT);
   }
@@ -82,13 +83,22 @@ void setup() {
 
 }
 
+void debug() {
+  for (int i = 0; i < 4; i++) {
+    Serial.println(digitalRead(pins[i]));
+  }
+  Serial.println("**************************************");
+}
+
 /**********************************************************************
  * LOOP
  * General game loop
  **********************************************************************/
 void loop() {
-  for (int i=0; i < 4; i++) {
-    if (digitalRead(pins[i]) {
+  delay(1000);
+  debug();
+  /*for (int i=0; i < 4; i++) {
+    if (digitalRead(pins[i])) {
       pressed[counter] = pins[i];
       counter++;
       playSound(inputSound);
@@ -105,5 +115,5 @@ void loop() {
       playSound(wrongSound);
       counter = 0;
     }
-  }
+  }*/
 }
