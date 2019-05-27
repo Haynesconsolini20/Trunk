@@ -105,9 +105,11 @@ void loop() {
   // If we've gotten 4 inputs, check the win state
   if (counter == 4) {
     if (checkWin()) {
+      digitalWrite(outputDevice, LOW);
       playSound(correctSound);
       counter = 0; 
       resetSequence();
+      digitalWrite(outputDevice, HIGH);
     }
     else {
       playSound(wrongSound);
