@@ -90,13 +90,20 @@ void debug() {
   Serial.println("**************************************");
 }
 
+bool buttonPressed(int pin) {
+  for (int i = 0; i < 4; i++) {
+    if (counter[i] == pin)
+      return true;
+  }
+  return false;
+}
 /**********************************************************************
  * LOOP
  * General game loop
  **********************************************************************/
 void loop() {
   for (int i=0; i < 4; i++) {
-    if (digitalRead(pins[i])) {
+    if (digitalRead(pins[i]) && !buttonPressed(pins[i])) {
       pressed[counter] = pins[i];
       counter++;
       playSound(inputSound);
