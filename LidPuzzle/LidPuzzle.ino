@@ -95,9 +95,7 @@ void debug() {
  * General game loop
  **********************************************************************/
 void loop() {
-  delay(1000);
-  debug();
-  /*for (int i=0; i < 4; i++) {
+  for (int i=0; i < 4; i++) {
     if (digitalRead(pins[i])) {
       pressed[counter] = pins[i];
       counter++;
@@ -115,5 +113,5 @@ void loop() {
       playSound(wrongSound);
       counter = 0;
     }
-  }*/
+  }
 }
