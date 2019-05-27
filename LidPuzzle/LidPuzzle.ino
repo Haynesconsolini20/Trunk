@@ -92,7 +92,7 @@ void debug() {
 
 bool buttonPressed(int pin) {
   for (int i = 0; i < 4; i++) {
-    if (counter[i] == pin)
+    if (pressed[i] == pin)
       return true;
   }
   return false;
