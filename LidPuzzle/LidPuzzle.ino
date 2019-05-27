@@ -103,7 +103,11 @@ bool buttonPressed(int pin) {
 void loop() {
   //debug();
   for (int i=0; i < 4; i++) {
-    if (digitalRead(pins[i]) && (correct[counter] == pins[i])) {
+    if ((digitalRead(pins[i])) && (correct[counter] == pins[i])) {
+      Serial.print("Pin ");
+      Serial.print(pins[i]);
+      Serial.print(" is ");
+      Serial.println(digitalRead(pins[i]));
       Serial.println("Button added");
       counter++;
       playSound(inputSound);
