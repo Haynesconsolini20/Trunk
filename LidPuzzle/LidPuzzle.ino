@@ -91,7 +91,7 @@ void debug() {
 }
 
 bool buttonPressed(int pin) {
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < counter; i++) {
     if (pressed[i] == pin)
       return true;
   }
