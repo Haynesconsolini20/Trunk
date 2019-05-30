@@ -15,10 +15,15 @@ int pins[4] = {2,3,4,5};
  * counter - keeps track of which index to write in the pressed array
  * SOUND_DELAY - milliseconds that sounds are played
  **********************************************************************/
-int correct[4] = {2,3,4,5}; 
-int pressed[4] = {0,0,0,0};
+int correct[16] = {2,3,4,5,0,0,0,0,0,0,0,0,0,0,0,0}; 
+int pressed[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; 
+
 int counter = 0;
 #define SOUND_DELAY 200
+int memCount = 0;
+unsigned long loopStart = 0;
+unsigned long elapsedTime = 0;
+
 
 /**********************************************************************
  * REPROGRAM BUTTONS
@@ -29,18 +34,30 @@ void reprogramButtons() {
   Serial.println("Reprogramming...");
   delay(500);
   int count = 0;
-  while (count < 4) {
+  unsigned long startTime = millis();
+  unsigned long elapsedTime = 0;
+  for (int i = 0; i < 16; i++) {
+    correct[i] = 0;
+  }
+  while (elapsedTime < 5000) {
+    elapsedTime = millis() - startTime;
     for (int i = 0; i < 4; i++) {
       if (digitalRead(pins[i])) {
         correct[count] = pins[i];
         playSound(inputSound);
         count++;
         Serial.println("New index recorded");
+        elapsedTime = 0;
+        startTime = millis();
       }
     }
   }
   Serial.println("Recording in memory");
+  for (int i = 0 ; i < EEPROM.length() ; i++) {
+    EEPROM.write(i, 0);
+  }
   EEPROM.put(0, correct);
+  memCount = count;
   Serial.println("Finished Reprogramming");
   playSound(correctSound);
 }
@@ -60,7 +77,7 @@ void playSound(int soundPin) {
  * Returns true if the correct and pressed arrays are equal
  **********************************************************************/
 bool checkWin() {
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < memCount; i++) {
     Serial.print("Checking ");
     Serial.print(pressed[i]);
     Serial.print(" against ");
@@ -97,17 +114,19 @@ void resetSequence() {
  **********************************************************************/
 void readMemory() {
   //Read sequence from memory 
-  int seq[4];
+  int seq[16];
   Serial.println("Checking memory for sequence");
   EEPROM.get(0, seq);
   Serial.println("Memory sequence:");
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 16; i++) {
     Serial.print(seq[i]);
+    if (seq[i] >= pins[0] && seq[i] <= pins[3]) 
+      memCount++;
   }
   Serial.println();
   Serial.println("********************");
-  if (seq[0] != -1) {
-    for (int i = 0; i < 4; i++) {
+  if (memCount > 0) {
+    for (int i = 0; i < memCount; i++) {
       correct[i] = seq[i];
     }
   }
@@ -141,17 +160,27 @@ void setup() {
  * General game loop
  **********************************************************************/
 void loop() {
+  if (loopStart > 0) 
+    elapsedTime = millis() - loopStart;
+  if (elapsedTime > 10000) {
+    playSound(wrongSound);
+    Serial.println("Waited too long inbetween pushes, timed out");
+    loopStart = 0;
+    elapsedTime = 0;
+    counter = 0;
+  }
   //Loop through the 4 inputs
   for (int i = 0; i < 4; i++) {
     if (digitalRead(pins[i]) == HIGH) {
       playSound(inputSound);
       pressed[counter] = pins[i];
+      loopStart = millis();
       counter++;
       Serial.println("Button Pressed");
     }
   }
   // If we've sequenced n times, we're done
-  if (counter == 4) {
+  if (counter == memCount) {
     if (checkWin()) {
       Serial.println("Correct sequence, win!");
       playSound(correctSound);
