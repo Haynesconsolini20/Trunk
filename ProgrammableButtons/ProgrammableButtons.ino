@@ -23,6 +23,8 @@ int counter = 0;
 int memCount = 0;
 unsigned long loopStart = 0;
 unsigned long elapsedTime = 0;
+unsigned long holdStart = 0;
+unsigned long holdTime = 0;
 
 
 /**********************************************************************
@@ -160,8 +162,29 @@ void setup() {
  * General game loop
  **********************************************************************/
 void loop() {
+  //Count up for time out
   if (loopStart > 0) 
     elapsedTime = millis() - loopStart;
+
+  //Count up for reprogramming holds
+  if (holdStart > 0 && digitalRead(pins[0]) && digitalRead(pins[3])) {
+    holdTime = millis() - loopStart;
+  }
+  else {
+    holdTime = 0;
+    holdStart = 0;
+  }
+    
+  //Reprogram if held for 5+ seconds
+  if (holdTime > 5000) {
+    Serial.println("Buttons held, reprogramming");
+    holdTime = 0;
+    holdStart = 0;
+    playSound(correctSound);
+    reprogramButtons();
+    counter = 0;
+  }
+  //Time out if no action for 10 seconds after a push
   if (elapsedTime > 10000) {
     playSound(wrongSound);
     Serial.println("Waited too long inbetween pushes, timed out");
@@ -169,14 +192,22 @@ void loop() {
     elapsedTime = 0;
     counter = 0;
   }
+  //Check for held programming buttons
+  if (digitalRead(pins[0]) && digitalRead(pins[3]) && (holdStart == 0)) {
+    holdStart = millis();
+  }
   //Loop through the 4 inputs
   for (int i = 0; i < 4; i++) {
     if (digitalRead(pins[i]) == HIGH) {
+      //Dont follow the normal chain of events if we're holding for programming
+      if ((i == 0 || i == 3) && (holdStart > 0))
+        break;
       playSound(inputSound);
       pressed[counter] = pins[i];
       loopStart = millis();
       counter++;
       Serial.println("Button Pressed");
+      delay(200); //Prevent accidental double pressing
     }
   }
   // If we've sequenced n times, we're done
@@ -185,7 +216,7 @@ void loop() {
       Serial.println("Correct sequence, win!");
       playSound(correctSound);
       counter = 0; 
-      resetSequence();
+      //resetSequence();
       Serial.println("Reset finished");
       delay(500);
     }
