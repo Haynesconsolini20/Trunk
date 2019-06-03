@@ -176,7 +176,7 @@ void loop() {
   }
     
   //Reprogram if held for 5+ seconds
-  if (holdTime > 5000) {
+  if (holdTime > 5000 && !(digitalRead(pins[0]) && !(digitalRead(pins[3])) {
     Serial.println("Buttons held, reprogramming");
     holdTime = 0;
     holdStart = 0;
