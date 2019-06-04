@@ -167,14 +167,7 @@ void loop() {
     elapsedTime = millis() - loopStart;
 
   //Count up for reprogramming holds
-  if (holdStart > 0 && digitalRead(pins[0]) && digitalRead(pins[3])) {
-    holdTime = millis() - loopStart;
-  }
-  else {
-    holdTime = 0;
-    holdStart = 0;
-  }
-    
+     
   //Reprogram if held for 5+ seconds
   if (holdTime > 5000 && !(digitalRead(pins[0]) && !(digitalRead(pins[3])))) {
     Serial.println("Buttons held, reprogramming");
@@ -184,6 +177,14 @@ void loop() {
     reprogramButtons();
     counter = 0;
   }
+  else if (holdStart > 0 && digitalRead(pins[0]) && digitalRead(pins[3])) {
+    holdTime = millis() - loopStart;
+  }
+  else {
+    holdTime = 0;
+    holdStart = 0;
+  }
+ 
   //Time out if no action for 10 seconds after a push
   if (elapsedTime > 10000) {
     playSound(wrongSound);
