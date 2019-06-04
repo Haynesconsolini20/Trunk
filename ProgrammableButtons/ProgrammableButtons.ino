@@ -38,6 +38,8 @@ void reprogramButtons() {
     playSound(inputSound);
     delay(500);
   }
+  delay(1500);
+  playSound(inputSound);
   int count = 0;
   unsigned long startTime = millis();
   unsigned long elapsedTime = 0;
