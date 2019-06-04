@@ -178,7 +178,6 @@ void loop() {
     Serial.println("Buttons held, reprogramming");
     holdTime = 0;
     holdStart = 0;
-    playSound(correctSound);
     reprogramButtons();
     counter = 0;
   }
