@@ -34,8 +34,10 @@ unsigned long holdTime = 0;
  **********************************************************************/
 void reprogramButtons() {
   Serial.println("Reprogramming...");
-  delay(5000);
-  playSound(inputSound);
+  for (int i = 0; i < 3; i++) {
+    playSound(inputSound);
+    delay(500);
+  }
   int count = 0;
   unsigned long startTime = millis();
   unsigned long elapsedTime = 0;
