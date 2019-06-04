@@ -34,7 +34,8 @@ unsigned long holdTime = 0;
  **********************************************************************/
 void reprogramButtons() {
   Serial.println("Reprogramming...");
-  delay(500);
+  delay(5000);
+  playSound(inputSound);
   int count = 0;
   unsigned long startTime = millis();
   unsigned long elapsedTime = 0;
@@ -169,7 +170,7 @@ void loop() {
   //Count up for reprogramming holds
      
   //Reprogram if held for 5+ seconds
-  if (holdTime > 5000 && !(digitalRead(pins[0]) && !(digitalRead(pins[3])))) {
+  if (holdTime > 2000 && !(digitalRead(pins[0]) && !(digitalRead(pins[3])))) {
     Serial.println("Buttons held, reprogramming");
     holdTime = 0;
     holdStart = 0;
